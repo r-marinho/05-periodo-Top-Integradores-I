@@ -1,0 +1,28 @@
+@host = http://localhost:3000
+
+### Criar produto
+POST {{host}}/api/produtos
+Content-Type: application/json
+
+{
+  "nome": "Caneta",
+  "preco": 2.5,
+  "quantidade": 100
+}
+
+### Listar
+GET {{host}}/api/produtos
+
+### Obter por ID
+GET {{host}}/api/produtos/681e5132667c53b422374b7f
+
+### Atualizar
+PUT {{host}}/api/produtos/681e5132667c53b422374b7f
+Content-Type: application/json
+
+{
+  "preco": 3.0
+}
+
+### Deletar
+DELETE {{host}}/api/produtos/681a44770e80dbc8c7e83206
