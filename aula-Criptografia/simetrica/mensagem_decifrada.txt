@@ -1,0 +1,2 @@
+Mensagem secreta para o teste de criptografia simétrica
+Mensagem de Rafael
