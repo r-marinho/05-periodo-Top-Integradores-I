@@ -14,7 +14,7 @@
 
 A clínica MedConnect reúne médicos de diversas especialidades em diferentes hospitais. Quando um médico identifica que um paciente precisa de atendimento em outra área, ele **indica** um colega especialista, formando, ao longo do tempo, uma rede de indicações entre profissionais.
 
-O sistema registra três tipos de nós "`Medico`, `Hospital` e `Paciente`"— conectados por três tipos de relacionamentos:
+O sistema registra três tipos de nós "`Medico`, `Hospital` e `Paciente`", conectados por três tipos de relacionamentos:
 
 - `(Medico)-[:TRABALHA_EM]->(Hospital)`
 - `(Medico)-[:INDICOU {data}]->(Medico)`
@@ -22,30 +22,25 @@ O sistema registra três tipos de nós "`Medico`, `Hospital` e `Paciente`"— co
 
 **Por que Neo4j e não um SGBD relacional?**
 - A rede de indicações entre médicos é um grafo por natureza: um clínico geral indica um cardiologista, que pode indicar um neurologista, e assim por diante. Navegar essa cadeia transitivamente em SQL exige `WITH RECURSIVE`. Em Cypher, o operador `*` resolve em uma linha: `[:INDICOU*]`.
-- Detectar médicos que se indicam mutuamente sem passagem por paciente — padrão associado a fraude em convênios — é uma busca por ciclos no grafo, direta em Cypher e trabalhosa em SQL.
+- Detectar médicos que se indicam mutuamente sem passagem por paciente (padrão associado a fraude em convênios) é uma busca por ciclos no grafo, direta em Cypher e trabalhosa em SQL.
 - O caminho de indicações entre dois médicos é resolvido com `shortestPath()` em uma linha.
 - As propriedades `data` (em `INDICOU`) e `data` e `motivo` (em `CONSULTOU`) ficam no próprio relacionamento, sem tabelas de junção.
 
 ### Instruções gerais
 
-A atividade deverá ser resolvida **individualmente**, diretamente no laboratório, e **apresentada ao professor ao final da aula** com o Neo4j Browser aberto exibindo o grafo final.
+A atividade deverá ser resolvida **individualmente**, diretamente no laboratório, e **apresentada ao professor ao final da aula** com o Neo4j aberto exibindo o grafo final.
 
 **Como abrir o ambiente:**
 1. Abra o **Neo4j Desktop**.
-2. Inicie o banco de dados do projeto clicando em **Start**.
-3. Clique em **Open** para abrir o **Neo4j Browser** (`http://localhost:7474`).
+2. Crie e inicie o banco de dados do projeto.
+3. Se desejar, poe usar o **Neo4j Browser** (`http://localhost:7474`).
 4. Faça login com as credenciais configuradas no projeto.
 
-**Como usar o Neo4j Browser:**
-- Digite os comandos Cypher na **barra de consulta** no topo da tela.
-- Pressione **Ctrl + Enter** (ou clique no botão ▶) para executar.
-- O resultado aparece no painel abaixo — alterne entre a **visualização de grafo** (ícone de bolhas) e a **tabela** (ícone de grade) conforme necessário.
-
-**Regra obrigatória:** **Todos os comandos devem ser digitados manualmente no Neo4j Browser.** O objetivo da prática é que o aluno leia, entenda e memorize a sintaxe Cypher.
+**Regra obrigatória:** **Todos os comandos devem ser digitados manualmente no Neo4j Desktop/Browser.** O objetivo da prática é que o aluno leia, entenda e memorize a sintaxe Cypher.
 
 Para cada questão, o aluno deve:
-1. **Digitar o comando** no Neo4j Browser.
-2. **Conferir o resultado** retornado — como grafo ou tabela.
+1. **Digitar o comando** no Neo4j.
+2. **Conferir o resultado** retornado, como grafo ou tabela.
 3. **Observar** os nós e relacionamentos criados ou modificados no painel de resultado.
 
 ---
@@ -54,7 +49,7 @@ Para cada questão, o aluno deve:
 
 ### Questão 1 — Verificando o estado inicial do banco
 
-Execute o comando abaixo para confirmar que o Neo4j Browser está conectado e que o banco não possui nós cadastrados:
+Execute o comando abaixo para confirmar que o Neo4j está conectado e que o banco não possui nós cadastrados:
 
 ```cypher
 MATCH (n) RETURN count(n) AS total_nos
@@ -393,7 +388,7 @@ MATCH (m:Medico) RETURN m.nome AS medico ORDER BY m.nome
 
 Quando o professor passar em sua mesa, apresente:
 
-**No Neo4j Browser:**
+**No Neo4j Desktop/Browser:**
 
 1. Execute o comando abaixo para exibir o **grafo completo** com todos os nós e relacionamentos:
 
