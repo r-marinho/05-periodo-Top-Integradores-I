@@ -5,16 +5,16 @@
 **PROFESSOR:** RAFAEL MARINHO E SILVA
 
 **VALOR:** 02 PONTOS
-**DATA DE ENTREGA (até o final da aula):** Turma A ___/06/2026 | Turma B: ___/06/2026
+**DATA DE ENTREGA (até o final da aula):** 02/06/2026
 
 ---
 
 ## ATIVIDADE AVALIATIVA – Neo4j
 ### Cenário: Rede de Indicação Médica **"MedConnect"**
 
-A clínica MedConnect reúne médicos de diversas especialidades em diferentes hospitais. Quando um médico identifica que um paciente precisa de atendimento em outra área, ele **indica** um colega especialista — formando, ao longo do tempo, uma rede de indicações entre profissionais.
+A clínica MedConnect reúne médicos de diversas especialidades em diferentes hospitais. Quando um médico identifica que um paciente precisa de atendimento em outra área, ele **indica** um colega especialista, formando, ao longo do tempo, uma rede de indicações entre profissionais.
 
-O sistema registra três tipos de nós — `Medico`, `Hospital` e `Paciente` — conectados por três tipos de relacionamentos:
+O sistema registra três tipos de nós "`Medico`, `Hospital` e `Paciente`"— conectados por três tipos de relacionamentos:
 
 - `(Medico)-[:TRABALHA_EM]->(Hospital)`
 - `(Medico)-[:INDICOU {data}]->(Medico)`
