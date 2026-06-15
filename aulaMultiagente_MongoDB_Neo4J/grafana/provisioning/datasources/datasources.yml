@@ -1,0 +1,12 @@
+apiVersion: 1
+
+# Provisiona o datasource Infinity automaticamente (sem clique manual).
+# O Infinity lê JSON de qualquer URL HTTP. A URL de cada consulta é definida
+# no painel, apontando para a API de leitura pelo nome do serviço na rede do
+# compose, por exemplo:  http://api_leitura:8000/mongo/serie?par=USD-BRL
+datasources:
+  - name: Infinity
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: true
+    editable: true

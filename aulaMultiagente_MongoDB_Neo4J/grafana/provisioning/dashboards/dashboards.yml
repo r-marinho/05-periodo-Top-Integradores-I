@@ -1,0 +1,11 @@
+apiVersion: 1
+
+# Carrega automaticamente todos os dashboards .json desta pasta.
+providers:
+  - name: Cambio
+    type: file
+    disableDeletion: false
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: false

@@ -1,0 +1,34 @@
+{
+  "name": "cambio-nosql",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+
+  // Docker-in-Docker: permite rodar "docker compose up" DENTRO do Codespace.
+  // (Mais robusto que usar o compose como ambiente de dev: o IDE sobe mesmo
+  //  que os serviços da aplicação ainda não estejam prontos.)
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  // Portas que o Codespaces vai expor automaticamente no navegador.
+  "forwardPorts": [3000, 7474, 7687, 8000],
+  "portsAttributes": {
+    "3000": { "label": "Grafana (dashboard)" },
+    "7474": { "label": "Neo4j Browser" },
+    "7687": { "label": "Neo4j Bolt" },
+    "8000": { "label": "API de Leitura" }
+  },
+
+  // Instala libs Python locais (para rodar testes fora do container) e avisa o aluno.
+  "postCreateCommand": "pip install --user requests pymongo neo4j pydantic fastapi uvicorn pytest && echo 'Ambiente pronto. Rode: cp .env.example .env && docker compose up --build'",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-azuretools.vscode-docker",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ]
+    }
+  }
+}

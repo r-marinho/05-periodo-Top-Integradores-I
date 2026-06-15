@@ -1,0 +1,110 @@
+name: cambio-nosql
+
+# Orquestra os 5 serviços da prática. Suba tudo com: docker compose up --build
+# As senhas e parâmetros vêm do arquivo .env (copie de .env.example).
+
+services:
+  # ---------------------------------------------------------------------------
+  # Banco de DOCUMENTOS — guarda o histórico de cotações (uma cotação = 1 doc)
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:7
+    container_name: cambio_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Banco de GRAFO — guarda moedas (nós) e conversões (arestas)
+  # ---------------------------------------------------------------------------
+  neo4j:
+    image: neo4j:5
+    container_name: cambio_neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
+      NEO4J_server_memory_pagecache_size: 256M
+    ports:
+      - "7474:7474"   # Neo4j Browser (interface web)
+      - "7687:7687"   # Bolt (driver da aplicação)
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  # ---------------------------------------------------------------------------
+  # Coleta da AwesomeAPI -> FILTRO de qualidade -> grava nos dois bancos
+  # ---------------------------------------------------------------------------
+  ingestor:
+    build: ./ingestor
+    container_name: cambio_ingestor
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: cambio
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      PARES: ${PARES}
+      INTERVALO_SEGUNDOS: ${INTERVALO_SEGUNDOS}
+
+  # ---------------------------------------------------------------------------
+  # API de leitura — expõe os dois bancos como JSON para o Grafana ler
+  # ---------------------------------------------------------------------------
+  api_leitura:
+    build: ./api_leitura
+    container_name: cambio_api
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: cambio
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+
+  # ---------------------------------------------------------------------------
+  # Dashboard — lê a API de leitura pelo plugin Infinity (gratuito)
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana-oss:11.1.0
+    container_name: cambio_grafana
+    restart: unless-stopped
+    depends_on:
+      - api_leitura
+    ports:
+      - "3000:3000"
+    environment:
+      GF_INSTALL_PLUGINS: yesoreyeram-infinity-datasource
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  mongo_data:
+  neo4j_data:
+  grafana_data:

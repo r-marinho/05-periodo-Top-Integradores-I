@@ -1,0 +1,25 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "panels": [
+    {
+      "type": "text",
+      "title": "Câmbio NoSQL — dashboard inicial",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "mode": "markdown",
+        "content": "# Dashboard em construção\n\nEste painel inicial existe só para o Grafana subir já provisionado.\n\nO **Agente de Visualização** deve substituí-lo pelos painéis reais, consumindo a API de leitura pelo datasource **Infinity** (`http://api_leitura:8000/...`):\n\n1. Série temporal das moedas (do MongoDB)\n2. Cards com cotação atual e variação\n3. Tabela de pares\n4. Grafo de conversão (painel **Node Graph**, do Neo4j)\n\nVer `docs/06_desenvolvimento_visualizacao_modulo.md`."
+      }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["cambio", "nosql"],
+  "templating": { "list": [] },
+  "time": { "from": "now-30d", "to": "now" },
+  "title": "Câmbio NoSQL",
+  "uid": "cambio-nosql",
+  "version": 1
+}
